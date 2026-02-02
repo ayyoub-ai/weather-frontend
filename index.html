@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>☁️ Météo Azure</title>
+  <style>
+    body {
+      background-color: #0078D4; /* Bleu Azure */
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+    input, button {
+      padding: 12px;
+      margin: 10px;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+    }
+    #result {
+      font-size: 28px;
+      margin-top: 25px;
+      min-height: 40px;
+    }
+    .highlight { 
+      background: rgba(255,255,255,0.1); 
+      padding: 15px; 
+      border-radius: 10px; 
+    }
+  </style>
+</head>
+<body>
+  <h1>☁️ Azure Weather Bot</h1>
+  <p>Entrez une ville :</p>
+  <input type="text" id="cityInput" placeholder="Ex: Paris, Tokyo..." value="Casablanca"/>
+  <br/>
+  <button onclick="getWeather()">Afficher la météo</button>
+  
+  <div class="highlight">
+    <div id="result">🌤️ Chargement...</div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById("cityInput").value.trim();
+      if (!city) return;
+      
+      const funcUrl = `https://weatherbotclassic-fqf7b9gacrakgwdv.norwayeast-01.azurewebsites.net/api/GetWeather?code=lsS-WirZvCaXPAVJB3t7EyNl5hdfcnuJT-sjTpyqRN7MAzFuLzmbUQ==&city=${encodeURIComponent(city)}`;
+      
+      try {
+        document.getElementById("result").innerText = "⏳ Chargement...";
+        const res = await fetch(funcUrl);
+        const data = await res.json();
+        document.getElementById("result").innerHTML = 
+          `${data.emoji} ${data.temp}°C – ${data.message}`;
+      } catch (e) {
+        document.getElementById("result").innerText = "❌ Erreur de connexion";
+      }
+    }
+    
+    // Charger Casablanca au démarrage
+    window.onload = getWeather;
+  </script>
+</body>
+</html>
